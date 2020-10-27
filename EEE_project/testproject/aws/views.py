@@ -82,7 +82,7 @@ def home(request):
 
 def result(request):
     if request.method =='POST':
-        text = request.POST.get('text1', 0)
+        text = request.POST.get('text1')
         texts = preprocessing_text(text)
         print(texts)  # 전처리
 
@@ -93,11 +93,11 @@ def result(request):
             q_list.append(query.url)
         print(q_list)
 
-        q = mark_safe(json.dumps(q_list))
+        # q = mark_safe(json.dumps(q_list))
         context={
-            'q':q
+            'q':q_list
         }
-        return render(request, 'result.html', context)
+        return JsonResponse(context)
 
     return render(request, 'result.html')
 

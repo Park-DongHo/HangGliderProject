@@ -8,8 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
     <link rel = "stylesheet" href='{% static "result.css" %}' type="text/css">
 </head>
-<body onload="onload();">
+<body>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     {% comment %} webcam {% endcomment %}
     <video class="webcam" id="myVidPlayer" controls autoplay width="1280" height="720"></video>
     <script type="text/javascript">
@@ -30,7 +31,7 @@
     </script>
 
     {% comment %} sign_language_video {% endcomment %}
-    <video class="sign_language" id="idle_video" muted width="1280" height="720" onended="onVideoEnded();"></video>
+    {% comment %} <video class="sign_language" id="idle_video" muted width="1280" height="720" onended="onVideoEnded();"></video>
     <script type="text/javascript">
         var video_list      = {{q|safe}};
         var video_index     = 0;
@@ -57,29 +58,7 @@
             video_player.play();
         }
 
-    </script>
-
-    {% comment %} 부가 기능 {% endcomment %}
-    <div class="content" id="sub" >
-        <h1><form action = "{% url 'result' %}" method='POST'>
-            {% csrf_token %}
-            <label>문장입력: </label>
-            <input type="text" placeholder="" name='text1' style="border:none">
-            <button type='submit'>Enter</button>
-        </form></h1>
-    </div>
-    
-    <button id="myBtn" onclick="myFunction2()">자막 보기</button>
-    <script>
-        function myFunction2() {
-        var x = document.getElementById("sub");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
-        }
-        }
-    </script>
+    </script> {% endcomment %}
 
     <button id="myBtn" onclick="myFunction()">수화 보기</button>
     <script>
@@ -92,5 +71,105 @@
         }
         }
     </script>
+
+    {% comment %} 부가 기능 {% endcomment %}
+    <div class="content" id="sub" >
+        <h1><form id="sentence" method='POST'>
+            {% csrf_token %}
+            <label>문장입력: </label>
+            <input type="text" placeholder="" id='text1' name='text1' style="border:none">
+            <button type='submit'>Enter</button>
+        </form></h1>
+    </div>
+    <video class="sign_language" id="idle_video" muted width="1280" height="720" onended="onVideoEnded();"></video>
+    <script type="text/javascript">
+
+        var video_list      = [];
+        var video_index     = 0;
+        var video_player    = null;
+        var firstview       = true;
+        var new_arr         = [];
+        var x = document.getElementById("idle_video");
+        function onload(){
+            console.log("body loaded");
+            console.log("list : ",video_list);
+            video_player = document.getElementById("idle_video");
+            video_player.setAttribute("src", video_list[video_index]);
+            video_player.play();
+        }
+
+        function onVideoEnded(){
+            console.log("video ended");
+            if(video_index < video_list.length - 1){
+                video_index++;
+            }
+            else {
+                video_index = 0;
+                video_list = [];
+                firstview = true;
+                return
+            }
+            video_player.setAttribute("src", video_list[video_index]);
+            video_player.play();
+        }
+
+        function myFunction() {
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+        }
+
+
+
+        $(document).on('submit', '#sentence',function(e){
+            e.preventDefault();
+            $.ajax({
+                type:'POST',
+                url:'{% url "result" %}',
+                data:{
+                    text1:$('#text1').val(),
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                    action: 'POST'
+                },
+                success:function(json){
+                    console.log("data pass",json.q);
+                    document.getElementById("sentence").reset();
+                    new_arr = json.q;
+                    if (firstview){
+                        video_list = $.merge([], new_arr);
+                        onload();
+                    } else{
+                        video_list = $.merge( $.merge([],video_list), new_arr);
+                    }
+                    firstview = false;
+
+                    
+                    console.log("data pass2",video_list);
+                    
+                    
+                    
+                },
+                error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+            });
+        });
+    </script>
+
+    <button id="myBtn" onclick="myFunction2()">자막 보기</button>
+    <script>
+        function myFunction2() {
+        var x = document.getElementById("sub");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+        }
+    </script>
+
+    
 </body>
 </html>
