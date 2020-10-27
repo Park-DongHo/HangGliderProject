@@ -69,6 +69,38 @@ def preprocessing_text(sentence):
     
     return pre_text
 
+def logout(request):
+    auth.logout(request)
+
+    return redirect('home')
+
+# Create your views here.
+def home(request):
+    
+    return render(request, 'home.html')
+
+
+def result(request):
+    if request.method =='POST':
+        text = request.POST.get('text1', 0)
+        texts = preprocessing_text(text)
+        print(texts)  # 전처리
+
+        q_list=[]   # url list
+        
+        for word in texts:
+            query=token.objects.get(text=word)
+            q_list.append(query.url)
+        print(q_list)
+
+        q = mark_safe(json.dumps(q_list))
+        context={
+            'q':q
+        }
+        return render(request, 'result.html', context)
+
+    return render(request, 'result.html')
+
 ERROR_MSG = {
     'ID_EXIST': '이미 사용 중인 아이디 입니다.',
     'ID_NOT_EXIST': '존재하지 않는 아이디 입니다',
@@ -153,41 +185,4 @@ def login(request):
             context['error']['msg'] = ERROR_MSG['ID_PW_MISSING']
 
     return render(request, 'login.html', context)
-
-def logout(request):
-    auth.logout(request)
-
-    return redirect('home')
-
-# Create your views here.
-def home(request):
-    
-    return render(request, 'home.html')
-
-
-
-
-def result(request):
-
-    
-
-    if request.POST.get('action') == 'post':
-        response_data = {}
-        title = request.POST.get('title')
-        texts = preprocessing_text(title)
-        q_list=[]
-        for word in texts:
-            query=token.objects.get(text=word)
-            q_list.append(query.url)
-        q = mark_safe(json.dumps(q_list))
-        response_data={
-            'title':q
-        }
-        
-        return JsonResponse(response_data)
-
-
-    return render(request, 'result.html')
-
-
         
