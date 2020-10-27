@@ -9,6 +9,7 @@
     <link rel = "stylesheet" href='{% static "result.css" %}' type="text/css">
 </head>
 <body onload="onload();">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     {% comment %} webcam {% endcomment %}
     <video class="webcam" id="myVidPlayer" controls autoplay width="1280" height="720"></video>
     <script type="text/javascript">
@@ -55,12 +56,19 @@
             video_player.setAttribute("src", video_list[video_index]);
             video_player.play();
         }
+
     </script>
 
     {% comment %} 부가 기능 {% endcomment %}
     <div class="content" id="sub" >
-        <h1>속기</h1>
+        <h1><form action = "{% url 'result' %}" method='POST'>
+            {% csrf_token %}
+            <label>문장입력: </label>
+            <input type="text" placeholder="" name='text1' style="border:none">
+            <button type='submit'>Enter</button>
+        </form></h1>
     </div>
+    
     <button id="myBtn" onclick="myFunction2()">자막 보기</button>
     <script>
         function myFunction2() {

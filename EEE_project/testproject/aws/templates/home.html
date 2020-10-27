@@ -29,14 +29,7 @@
     </nav>
     <div class="body_container">
         <div class="wrapper">
-            <div class="input-data">
-                <form action = "{% url 'result' %}" method='POST'>
-                    {% csrf_token %}
-                    <input type="text" name='text1' style="border:none" required>
-                    <div class="underline"></div>
-                    <label>문장을 입력하세요</label>
-                </form>
-            </div>
+                <h1><a href="{% url 'result' %}">입장</a></h1>
         </div>
     </div>
 </body>

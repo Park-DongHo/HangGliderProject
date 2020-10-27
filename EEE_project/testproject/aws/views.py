@@ -5,6 +5,7 @@ import json
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.utils.safestring import mark_safe
+from django.http import JsonResponse
 
 def preprocessing_text(sentence):
     okt=Okt()
@@ -167,20 +168,24 @@ def home(request):
 
 
 def result(request):
-    if request.method =='POST':
-        text = request.POST['text1']
-        texts = preprocessing_text(text)
-        print(texts)
+
+    
+
+    if request.POST.get('action') == 'post':
+        response_data = {}
+        title = request.POST.get('title')
+        texts = preprocessing_text(title)
         q_list=[]
         for word in texts:
             query=token.objects.get(text=word)
             q_list.append(query.url)
-        print(q_list)
         q = mark_safe(json.dumps(q_list))
-        context={
-            'q':q
+        response_data={
+            'title':q
         }
-        return render(request, 'result.html', context)
+        
+        return JsonResponse(response_data)
+
 
     return render(request, 'result.html')
 
