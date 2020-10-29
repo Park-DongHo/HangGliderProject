@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.utils.safestring import mark_safe
 from django.http import JsonResponse
+from .bin.nlp import NLP
 
 def preprocessing_text(sentence):
     okt=Okt()
@@ -83,6 +84,12 @@ def home(request):
 def result(request):
     if request.method =='POST':
         text = request.POST.get('text1')
+
+        nlp = NLP()
+        pre_text= nlp.relocateMorpheme(text)
+        print(pre_text)
+
+        
         texts = preprocessing_text(text)
         print(texts)  # 전처리
 
