@@ -8,7 +8,8 @@ from .stopword import StopWord
 class NLP:
     def __init__(self):
         self.komoran = Komoran(DEFAULT_MODEL['FULL'])
-        self.komoran.set_user_dic("C:/Users/tpqls/OneDrive/바탕 화면/2019-cap1-2019_7-master/src/NLP/txt/dic.user")
+        self.komoran.set_user_dic(r"C:\Users\DongHo\Documents\GitHub\HangGliderProject\EEE_project\testproject\aws\bin\txt")
+        # 위의 경로는 본인 로컬 주소로 바꾸시오!
         self.pr = StopWord()
         pass
 
