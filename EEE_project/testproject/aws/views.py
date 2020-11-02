@@ -1,74 +1,13 @@
 from django.shortcuts import render, redirect
 from aws.models import token
-from konlpy.tag import Okt
 import json
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.utils.safestring import mark_safe
 from django.http import JsonResponse
 from .bin.nlp import NLP
+from .bin.mapping import matchingSign 
 
-def preprocessing_text(sentence):
-    okt=Okt()
-    not_word=['Josa','Punctuation','Suffix']
-    stop_word=['분','하다','것','여기','이다','나오니','부분','기술']
-    wrong_word=['안녕하다', '오신','수고','보다','되어다','해주다','지금','진행','이','Ai','이용','청각장애','위해']
-    edit_word=['안녕하세요', '오다','수고하다','만나다','되다','부탁','지금부터','진행하다','이것','Ai기술','이용하다','청각장애인','위하다']
-
-    ori_text = okt.pos(sentence,stem=True)
-    pre_text=[]
-    idx_=0
-    TF_bool=True
-    for word in ori_text:
-        idx=0
-        trash=''
-        if word[0]=='프로그램' and TF_bool:
-            pre_text.append('무엇')
-            TF_bool=False
-            idx_+=1
-            continue
-        elif word[0]=='가다':
-            pre_text.append('해보다')
-            break
-        elif word[0]=='이니':
-            pre_text.append('때문에')
-            pre_text.append('천천히')
-            pre_text.append('하다')
-            break
-        elif word[0]=='수화':
-            pre_text.append(word[0])
-            pre_text.append('바꾸다')
-            continue
-        elif word[0]=='배우다':
-            pre_text.append(word[0])
-            pre_text.append('~던')
-            continue    
-        elif word[0]=='소통':
-            pre_text.append(word[0])
-            pre_text.append('돕다')
-            continue
-        elif (word[0] not in stop_word) and (word[1] not in not_word):
-            if word[0] in wrong_word :
-                idx=wrong_word.index(word[0])
-                pre_text.append(edit_word[idx])
-                idx_+=1
-                continue
-            if word[0]=='내용':
-                trash=pre_text[idx_-1]
-                pre_text[idx_-1]=word[0]
-                pre_text.append(trash)
-                idx_+=1
-                continue
-            pre_text.append(word[0])
-            idx_+=1
-    if '표현' in pre_text and '부탁' in pre_text:
-        pre_text.remove('부탁')
-    if 'Ai기술' in pre_text and '되다' in pre_text:
-        pre_text.remove('되다')
-    if '복습' in pre_text and '시간' in pre_text:
-        pre_text.remove('시간')
-    
-    return pre_text
 
 def logout(request):
     auth.logout(request)
@@ -89,20 +28,12 @@ def result(request):
         pre_text= nlp.relocateMorpheme(text)
         print(pre_text)
 
+        result = matchingSign(pre_text)
+        print(result)
         
-        texts = preprocessing_text(text)
-        print(texts)  # 전처리
 
-        q_list=[]   # url list
-        
-        for word in texts:
-            query=token.objects.get(text=word)
-            q_list.append(query.url)
-        print(q_list)
-
-        # q = mark_safe(json.dumps(q_list))
         context={
-            'q':q_list
+            'q':result
         }
         return JsonResponse(context)
 
