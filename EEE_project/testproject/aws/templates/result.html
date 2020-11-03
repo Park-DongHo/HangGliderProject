@@ -59,7 +59,7 @@
     </div>
 
     <div class="box_container">
-        <video class="sign_language" id="idle_video" muted width="1280" height="720"  onended="onVideoEnded();"></video>
+        <video class="sign_language" id="idle_video" muted width="1280" height="720" playbackRate=3 onended="onVideoEnded();"></video>
     </div>   
     <script type="text/javascript">
 
@@ -75,6 +75,7 @@
             video_player = document.getElementById("idle_video");
             // error
             video_player.setAttribute("src",'../../'+video_list[video_index]);
+            video_player.playbackRate=3
             video_player.play();
         }
 
@@ -90,6 +91,7 @@
                 return
             }
             video_player.setAttribute("src", '../../'+video_list[video_index]);
+            video_player.playbackRate=3
             video_player.play();
         }
 

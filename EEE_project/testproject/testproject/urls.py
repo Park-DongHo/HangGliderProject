@@ -26,5 +26,6 @@ urlpatterns = [
     path('signup/', aws.views.signup, name='signup'),
     path('login/', aws.views.login, name='login'),
     path('logout/', aws.views.logout, name='logout'),
+    path('index/', aws.views.index, name='index'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
