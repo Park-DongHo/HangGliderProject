@@ -1,35 +1,35 @@
-var messages = {
-  "start": {
-    msg: 'Click on the microphone icon and begin speaking.',
-    class: 'alert-success'},
-  "speak_now": {
-    msg: 'Speak now.',
-    class: 'alert-success'},
-  "no_speech": {
-    msg: 'No speech was detected. You may need to adjust your <a href="//support.google.com/chrome/answer/2693767" target="_blank">microphone settings</a>.',
-    class: 'alert-danger'},
-  "no_microphone": {
-    msg: 'No microphone was found. Ensure that a microphone is installed and that <a href="//support.google.com/chrome/answer/2693767" target="_blank">microphone settings</a> are configured correctly.',
-    class: 'alert-danger'},
-  "allow": {
-    msg: 'Click the "Allow" button above to enable your microphone.',
-    class: 'alert-warning'},
-  "denied": {
-    msg: 'Permission to use microphone was denied.',
-    class: 'alert-danger'},
-  "blocked": {
-    msg: 'Permission to use microphone is blocked. To change, go to chrome://settings/content/microphone',
-    class: 'alert-danger'},
-  "upgrade": {
-    msg: 'Web Speech API is not supported by this browser. It is only supported by <a href="//www.google.com/chrome">Chrome</a> version 25 or later on desktop and Android mobile.',
-    class: 'alert-danger'},
-  "stop": {
-      msg: 'Stop listening, click on the microphone icon to restart',
-      class: 'alert-success'},
-  "copy": {
-    msg: 'Content copy to clipboard successfully.',
-    class: 'alert-success'},
-}
+// var messages = {
+//   "start": {
+//     msg: 'Click on the microphone icon and begin speaking.',
+//     class: 'alert-success'},
+//   "speak_now": {
+//     msg: 'Speak now.',
+//     class: 'alert-success'},
+//   "no_speech": {
+//     msg: 'No speech was detected. You may need to adjust your <a href="//support.google.com/chrome/answer/2693767" target="_blank">microphone settings</a>.',
+//     class: 'alert-danger'},
+//   "no_microphone": {
+//     msg: 'No microphone was found. Ensure that a microphone is installed and that <a href="//support.google.com/chrome/answer/2693767" target="_blank">microphone settings</a> are configured correctly.',
+//     class: 'alert-danger'},
+//   "allow": {
+//     msg: 'Click the "Allow" button above to enable your microphone.',
+//     class: 'alert-warning'},
+//   "denied": {
+//     msg: 'Permission to use microphone was denied.',
+//     class: 'alert-danger'},
+//   "blocked": {
+//     msg: 'Permission to use microphone is blocked. To change, go to chrome://settings/content/microphone',
+//     class: 'alert-danger'},
+//   "upgrade": {
+//     msg: 'Web Speech API is not supported by this browser. It is only supported by <a href="//www.google.com/chrome">Chrome</a> version 25 or later on desktop and Android mobile.',
+//     class: 'alert-danger'},
+//   "stop": {
+//       msg: 'Stop listening, click on the microphone icon to restart',
+//       class: 'alert-success'},
+//   "copy": {
+//     msg: 'Content copy to clipboard successfully.',
+//     class: 'alert-success'},
+// }
 
 var final_transcript = '';
 var recognizing = false;
@@ -48,7 +48,7 @@ $( document ).ready(function() {
   if (!('webkitSpeechRecognition' in window)) {
     upgrade();
   } else {
-    showInfo('start');  
+    // showInfo('start');  
     start_button.style.display = 'inline-block';
     recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
@@ -56,26 +56,26 @@ $( document ).ready(function() {
 
     recognition.onstart = function() {
       recognizing = true;
-      showInfo('speak_now');
+      // showInfo('speak_now');
       start_img.src = url1;
     };
 
     recognition.onerror = function(event) {
       if (event.error == 'no-speech') {
         start_img.src = url3;
-        showInfo('no_speech');
+        // showInfo('no_speech');
         ignore_onend = true;
       }
       if (event.error == 'audio-capture') {
         start_img.src = url3;
-        showInfo('no_microphone');
+        // showInfo('no_microphone');
         ignore_onend = true;
       }
       if (event.error == 'not-allowed') {
         if (event.timeStamp - start_timestamp < 100) {
-          showInfo('blocked');
+          // showInfo('blocked');
         } else {
-          showInfo('denied');
+          // showInfo('denied');
         }
         ignore_onend = true;
       }
@@ -88,10 +88,10 @@ $( document ).ready(function() {
       }
       start_img.src = url3;
       if (!final_transcript) {
-        showInfo('start');
+        // showInfo('start');
         return;
       }
-      showInfo('stop');
+      // showInfo('stop');
       if (window.getSelection) {
         window.getSelection().removeAllRanges();
         var range = document.createRange();
@@ -132,7 +132,7 @@ function updateCountry() {
 
 function upgrade() {
   start_button.style.visibility = 'hidden';
-  showInfo('upgrade');
+  // showInfo('upgrade');
 }
 
 var two_line = /\n\n/g;
@@ -146,30 +146,30 @@ function capitalize(s) {
   return s.replace(first_char, function(m) { return m.toUpperCase(); });
 }
 
-$("#copy_button").click(function () {
-  if (recognizing) {
-    recognizing = false;
-    recognition.stop();
-  }
-  setTimeout(copyToClipboard, 500);
+// $("#copy_button").click(function () {
+//   if (recognizing) {
+//     recognizing = false;
+//     recognition.stop();
+//   }
+//   setTimeout(copyToClipboard, 500);
   
-});
+// });
 
-function copyToClipboard() {
-  if (document.selection) { 
-      var range = document.body.createTextRange();
-      range.moveToElementText(document.getElementById('results'));
-      range.select().createTextRange();
-      document.execCommand("copy"); 
+// function copyToClipboard() {
+//   if (document.selection) { 
+//       var range = document.body.createTextRange();
+//       range.moveToElementText(document.getElementById('results'));
+//       range.select().createTextRange();
+//       document.execCommand("copy"); 
   
-  } else if (window.getSelection) {
-      var range = document.createRange();
-       range.selectNode(document.getElementById('results'));
-       window.getSelection().addRange(range);
-       document.execCommand("copy");
-  }
-  showInfo('copy');
-}
+//   } else if (window.getSelection) {
+//       var range = document.createRange();
+//        range.selectNode(document.getElementById('results'));
+//        window.getSelection().addRange(range);
+//        document.execCommand("copy");
+//   }
+  // showInfo('copy');
+// }
 
 $("#start_button").click(function () {
   if (recognizing) {
@@ -183,7 +183,7 @@ $("#start_button").click(function () {
   final_span.innerHTML = '';
   interim_span.innerHTML = '';
   start_img.src = url2;
-  showInfo('allow');
+  // showInfo('allow');
   start_timestamp = event.timeStamp;
 });
 
@@ -192,15 +192,15 @@ $("#select_language").change(function () {
 });
 
 // 알림메시지 출력
-function showInfo(s) {
-  if (s) {
-    var message = messages[s];
-    $("#info").html(message.msg);
-    $("#info").removeClass();
-    $("#info").addClass('alert');
-    $("#info").addClass(message.class);
-  } else {
-    $("#info").removeClass();
-    $("#info").addClass('d-none');
-  }
+// function showInfo(s) {
+//   if (s) {
+//     var message = messages[s];
+//     $("#info").html(message.msg);
+//     $("#info").removeClass();
+//     $("#info").addClass('alert');
+//     $("#info").addClass(message.class);
+//   } else {
+//     $("#info").removeClass();
+//     $("#info").addClass('d-none');
+//   }
 }
