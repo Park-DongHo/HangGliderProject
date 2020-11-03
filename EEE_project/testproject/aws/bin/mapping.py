@@ -2,8 +2,6 @@ from aws.models import *    # db수정
 from django.conf import settings
 from .similarityVoca import SimilarytyWord
 
-
-
 def matchingSign(Morpheme_path):    # 여기수정
     print('##Match Sign Start...')
     line = Morpheme_path
@@ -18,15 +16,18 @@ def matchingSign(Morpheme_path):    # 여기수정
             if word.isdigit():
                 find_word = Number.objects.get(word=word)
                 results.append(find_word.location)
+                print(word)
 
             # 형태소가 DB 검색 시 1개 일 때,
             elif Basic.objects.filter(word=word).count() == 1:
                 find_word = Basic.objects.get(word=word)
                 results.append(find_word.location)
+                print(word)
 
             # 형태소가 DB 검색 시 여러 개 일 때,
             elif Basic.objects.filter(word=word).count() > 1:
                 find_word = Basic.objects.filter(word=word)
+                print(word)
 
                 # 참조단어 추가하는 코드
                 
@@ -89,12 +90,8 @@ def matchingSign(Morpheme_path):    # 여기수정
                     else:
                         results.append(locationList[n])
             
-
         except:
             continue
-
-    
-        
 
     print(results)
     print('##Match Sign End')

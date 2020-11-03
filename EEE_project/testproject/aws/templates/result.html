@@ -1,17 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     {% load static %}
     <meta charset="UTF-8">
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Result</title>
+    <script src="https://kit.fontawesome.com/d94daef18d.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
-    <link rel = "stylesheet" href='{% static "result.css" %}' type="text/css">
-</head>
-<body>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel = "stylesheet" href="{% static 'result.css' %}" type="text/css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    {% comment %} webcam {% endcomment %}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
     <video class="webcam" id="myVidPlayer" controls autoplay width="1280" height="720"></video>
     <script type="text/javascript">
         //Selector for your <video> element
@@ -30,58 +32,35 @@
             });
     </script>
 
-    {% comment %} sign_language_video {% endcomment %}
-    {% comment %} <video class="sign_language" id="idle_video" muted width="1280" height="720" onended="onVideoEnded();"></video>
-    <script type="text/javascript">
-        var video_list      = {{q|safe}};
-        var video_index     = 0;
-        var video_player    = null;
-
-        function onload(){
-            console.log("body loaded");
-            video_player = document.getElementById("idle_video");
-            video_player.setAttribute("src", video_list[video_index]);
-            video_player.play();
-        }
-
-        function onVideoEnded(){
-            console.log("video ended");
-            if(video_index < video_list.length - 1){
-                video_index++;
-            }
-            else {
-                video_index = 0;
-                myFunction();
-                return
-            }
-            video_player.setAttribute("src", video_list[video_index]);
-            video_player.play();
-        }
-
-    </script> {% endcomment %}
-
-    <button id="myBtn" onclick="myFunction()">수화 보기</button>
-    <script>
-        function myFunction() {
-        var x = document.getElementById("idle_video");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
-        }
-        }
-    </script>
-
-    {% comment %} 부가 기능 {% endcomment %}
-    <div class="content" id="sub" >
-        <h1><form id="sentence" method='POST'>
-            {% csrf_token %}
-            <label>문장입력: </label>
-            <input type="text" placeholder="" id='text1' name='text1' style="border:none">
-            <button type='submit'>Enter</button>
-        </form></h1>
+    <div class="box_container">
+        <div class="main_function" id='main_function'>
+            <div class="content" id="sub" >
+                <div class="float-right">
+                    <button id="start_button">
+                    <img id="start_img" src="{% static './images/mic.gif' %}" alt="Start"></button>
+                </div>
+                <div id="results">
+                    <span id="final_span" class="final"></span>
+                    <span id="interim_span" class="interim"></span>
+                </div>
+                <div class="row col-12 col-md-8 col-lg-6 p-0 m-0">
+                    <select id="select_language"></select>
+                    <select id="select_dialect"></select>
+                </div>
+    
+                <h1><form id="sentence" method='POST'>
+                    {% csrf_token %}
+                    <label>문장입력: </label>
+                    <input type="text" placeholder="" id='text1' name='text1' style="border:none">
+                    <button type='submit'>Enter</button>
+                </form></h1>
+            </div>
+        </div>
     </div>
-    <video class="sign_language" id="idle_video" muted width="1280" height="720"  onended="onVideoEnded();"></video>
+
+    <div class="box_container">
+        <video class="sign_language" id="idle_video" muted width="1280" height="720"  onended="onVideoEnded();"></video>
+    </div>   
     <script type="text/javascript">
 
         var video_list      = [];
@@ -95,7 +74,7 @@
             console.log("list : ",video_list);
             video_player = document.getElementById("idle_video");
             // error
-            video_player.setAttribute("src",'C:/Users/tpqls/OneDrive/바탕 화면/HangGliderProject-heejin/HangGliderProject-heejin/EEE_project/testproject'+video_list[video_index]); 
+            video_player.setAttribute("src",'../../'+video_list[video_index]);
             video_player.play();
         }
 
@@ -110,7 +89,7 @@
                 firstview = true;
                 return
             }
-            video_player.setAttribute("src", 'C:/Users/tpqls/OneDrive/바탕 화면/HangGliderProject-heejin/HangGliderProject-heejin/EEE_project/testproject'+video_list[video_index]);
+            video_player.setAttribute("src", '../../'+video_list[video_index]);
             video_player.play();
         }
 
@@ -159,18 +138,45 @@
         });
     </script>
 
-    <button id="myBtn" onclick="myFunction2()">자막 보기</button>
-    <script>
-        function myFunction2() {
-        var x = document.getElementById("sub");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
-        }
-        }
-    </script>
+    <div class="footer">
+        <div class="box">
+            <i class="fas fa-american-sign-language-interpreting" style="font-size: 25px;"></i>
+            <button id="Btn" onclick="myFunction()">수화 보기</button>
+            <script>
+                function myFunction() {
+                var x = document.getElementById("idle_video");
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+                }
+                }
+            </script>
+        </div>
 
+        <div class="box">
+            <i class="fas fa-align-justify" style="font-size: 25px;"></i>
+            <button id="Btn" onclick="myFunction2()">자막 보기</button>
+            <script>
+                function myFunction2() {
+                var x = document.getElementById("main_function");
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+                }
+                }
+            </script>
+        </div>
+    </div>
+
+    <script>
+        var url1 = "{% static 'images/mic-animation.gif' %}";
+        var url2 = "{% static 'images/mic-slash' %}";
+        var url3 = "{% static 'images/mic.gif' %}";
+    </script>
+    <script src="{% static 'languages.js' %}" ></script>
+    <script src="{% static 'web-speech-api.js' %}" ></script>
     
 </body>
 </html>
