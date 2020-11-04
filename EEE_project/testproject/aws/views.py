@@ -25,6 +25,8 @@ def index(request):
 
 
 def result(request):
+    default_video='aws/media/sign/basic/24224.mp4'
+
     if request.method =='POST':
         text = request.POST.get('text1')
 
@@ -34,7 +36,8 @@ def result(request):
 
         result = matchingSign(pre_text)
         print(result)
-        
+        if result == []:
+            result.append(default_video)
 
         context={
             'q':result
