@@ -72,11 +72,11 @@ $( document ).ready(function() {
         ignore_onend = true;
       }
       if (event.error == 'not-allowed') {
-        if (event.timeStamp - start_timestamp < 100) {
-          // showInfo('blocked');
-        } else {
-          // showInfo('denied');
-        }
+        // if (event.timeStamp - start_timestamp < 100) {
+        //   showInfo('blocked');
+        // } else {
+        //   showInfo('denied');
+        // }
         ignore_onend = true;
       }
     };
@@ -105,15 +105,53 @@ $( document ).ready(function() {
       for (var i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
           final_transcript += event.results[i][0].transcript;
+          final_transcript = capitalize(final_transcript);
+          final_span.innerHTML = linebreak(final_transcript);
+          interim_span.innerHTML = linebreak(interim_transcript);
+          $.ajax({
+            type:'POST',
+            url:'http://127.0.0.1:8000/result/',
+            data:{
+                text1:final_span.innerHTML,
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                action: 'POST'
+            },
+            success:function(json){
+                console.log("data pass",json.q);
+                document.getElementById("sentence").reset();
+                new_arr = json.q;
+                if (firstview){
+                    video_list = $.merge([], new_arr);
+                    onload();
+                } else{
+                    video_list = $.merge( $.merge([],video_list), new_arr);
+                }
+                final_span.innerHTML = '';
+                interim_span.innerHTML = '';
+                final_transcript = '';
+                firstview = false;
 
+                
+                console.log("data pass2",video_list);
+                
+                
+                
+            },
+            error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+          });
         } else {
           interim_transcript += event.results[i][0].transcript;
+          final_transcript = capitalize(final_transcript);
+          final_span.innerHTML = linebreak(final_transcript);
+          interim_span.innerHTML = linebreak(interim_transcript);
         }
       }
-      final_transcript = capitalize(final_transcript);
-      final_span.innerHTML = linebreak(final_transcript);
-      interim_span.innerHTML = linebreak(interim_transcript);
+      
+      
     };
+    
   }
 });
 
@@ -203,4 +241,4 @@ $("#select_language").change(function () {
 //     $("#info").removeClass();
 //     $("#info").addClass('d-none');
 //   }
-}
+// }

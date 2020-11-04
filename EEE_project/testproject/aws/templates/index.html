@@ -123,7 +123,7 @@
                 type:'POST',
                 url:'{% url "result" %}',
                 data:{
-                    text1:$('#text1').val(),
+                    text1:final_span.innerHTML,
                     csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
                     action: 'POST'
                 },
@@ -137,6 +137,9 @@
                     } else{
                         video_list = $.merge( $.merge([],video_list), new_arr);
                     }
+                    final_span.innerHTML = '';
+                    interim_span.innerHTML = '';
+                    final_transcript = '';
                     firstview = false;
 
                     
