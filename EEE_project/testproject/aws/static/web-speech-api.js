@@ -118,7 +118,6 @@ $( document ).ready(function() {
             },
             success:function(json){
                 console.log("data pass",json.q);
-                document.getElementById("sentence").reset();
                 new_arr = json.q;
                 if (firstview){
                     video_list = $.merge([], new_arr);

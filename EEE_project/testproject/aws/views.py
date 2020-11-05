@@ -6,24 +6,20 @@ from django.contrib import auth
 from django.utils.safestring import mark_safe
 from django.http import JsonResponse
 from .bin.nlp import NLP
-from .bin.mapping import matchingSign 
+from .bin.mapping import matchingSign
+from django.views.decorators.csrf import csrf_exempt
 
-
-def logout(request):
-    auth.logout(request)
-
-    return redirect('home')
 
 # Create your views here.
 def home(request):
     
     return render(request, 'home.html')
 
-def index(request):
-    
-    return render(request, 'index.html')
+def lesson(request):
 
+    return render(request, 'lesson.html')
 
+@csrf_exempt
 def result(request):
     default_video='aws/media/sign/basic/24224.mp4'
 
@@ -130,4 +126,8 @@ def login(request):
             context['error']['msg'] = ERROR_MSG['ID_PW_MISSING']
 
     return render(request, 'login.html', context)
-        
+
+def logout(request):
+    auth.logout(request)
+
+    return redirect('home')        
