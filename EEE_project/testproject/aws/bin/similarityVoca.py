@@ -7,7 +7,7 @@ import numpy as np
 class SimilarytyWord:
     def __init__(self):
         self.openApiURL = "http://aiopen.etri.re.kr:8000/WiseWWN/WordRel"
-        self.accessKey = "21ac1bd6-b061-4263-b88b-41111fc4decc"
+        self.accessKey = "d15d1b57-ecc5-43e3-b0e6-e9200ce7e92c"
         pass
 
     def similarity_voca(self, w1, w2):
@@ -52,11 +52,3 @@ class SimilarytyWord:
             return -1
         return result_sim.index(max(result_sim))
 
-
-if __name__ == '__main__':
-    sim = SimilarytyWord()
-    input_t = '공'
-    input_r = ['회사', '직업', '개인']
-    a = sim.calc_similarity(input_t, input_r)
-    print(a)
-    pass
