@@ -9,7 +9,8 @@ from .bin.nlp import NLP
 from .bin.mapping import matchingSign
 from django.views.decorators.csrf import csrf_exempt
 
-
+global nlp
+nlp = NLP()
 # Create your views here.
 def home(request):
     
@@ -23,24 +24,22 @@ def lesson(request):
 def result(request):
     default_video='aws/media/sign/basic/24224.mp4'
 
-    if request.method =='POST':
-        text = request.POST.get('text1')
+    text = request.POST.get('text1')
 
-        nlp = NLP()
-        pre_text= nlp.relocateMorpheme(text)
-        print(pre_text)
+    
+    pre_text= nlp.relocateMorpheme(text)
+    print(pre_text)
 
-        result = matchingSign(pre_text)
-        print(result)
-        if result == []:
-            result.append(default_video)
+    result = matchingSign(pre_text)
+    print(result)
+    if result == []:
+        result.append(default_video)
 
-        context={
-            'q':result
-        }
-        return JsonResponse(context)
+    context={
+        'q':result
+    }
+    return JsonResponse(context)
 
-    return render(request, 'result.html')
 
 ERROR_MSG = {
     'ID_EXIST': '이미 사용 중인 아이디 입니다.',

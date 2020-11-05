@@ -3,7 +3,7 @@ from django.conf import settings
 from .similarityVoca import SimilarytyWord
 from .nlp import NLP
 
-def matchingSign(Morpheme_path):    # 여기수정
+def matchingSign(Morpheme_path):   
     print('##Match Sign Start...')
     line = Morpheme_path
     nlp = NLP()
@@ -19,13 +19,13 @@ def matchingSign(Morpheme_path):    # 여기수정
             if word.isdigit():
                 find_word = Number.objects.get(word=word)
                 results.append(find_word.location)
-                # print(word)
+                print(find_word)
 
             # 형태소가 DB 검색 시 1개 일 때,
             elif Basic.objects.filter(word=word).count() == 1:
                 find_word = Basic.objects.get(word=word)
                 results.append(find_word.location)
-                # print(word)
+                print(find_word)
 
             # 형태소가 DB 검색 시 2개 일 때,
             elif Basic.objects.filter(word=word).count() == 2:
@@ -35,33 +35,29 @@ def matchingSign(Morpheme_path):    # 여기수정
             # 형태소가 DB 검색 시 여러 개 일 때,
             elif Basic.objects.filter(word=word).count() > 2:
                 find_word = Basic.objects.filter(word=word)
-                print(word)
-                mean_list=[]
-                part_list = []
-                for word in find_word:
-                    mean_list.append(word.mean)
-                    part_list.append(word.part)
-                    
-                print(mean_list)
-                print(part_list)
+                
+                
 
-
-# ===============================================================================================
+    # ===============================================================================================
                 # 명사 list, 왼쪽 오른쪽 명사거리, 명사, 참조단어 list, href list
                 noun = []
                 nounSub = []
                 refList = []
                 locationList = []
-
+                mean_list=[]
+                N=''
                 # 품사 리스트
                 parts = line[1]  # 품사
 
+                # 해당 단어의 왼쪽 방향 가까운 명사 찾기.
                 for i in range(idx-2, -1, -1):
                     if(parts[i] == "명사"):
                         noun.append(words[i])
                         nounSub.append(idx - i -1)
                         break
+                
 
+                # 해당 단어의 오른쪽 방향 가까운 명사 찾기
                 for i in range(idx, len(parts)):
                     if(parts[i] == "명사"):
 
@@ -69,10 +65,14 @@ def matchingSign(Morpheme_path):    # 여기수정
                         nounSub.append(i-idx+1)
                         break
 
-                if(nounSub[0]>nounSub[1]):
-                    N = noun[1]
-                else:
+                if len(nounSub) > 1 :
+                    if(nounSub[0]>nounSub[1]):
+                        N = noun[1]
+                elif len(nounSub) == 1:
                     N = noun[0]
+                elif N=='':
+                    results.append(find_word[0].location)
+                    continue
 
                 # 같은 품사 갯수
                 samePart = 0
@@ -86,7 +86,6 @@ def matchingSign(Morpheme_path):    # 여기수정
                         samePart += 1
                         print('일치하는 품사가 있다')
                         href = result.location
-
                     pre_text= nlp.relocateMorpheme(result.mean)
                     for i in range(len(pre_text[1])):
                         if pre_text[1][i] =='명사':
@@ -94,11 +93,9 @@ def matchingSign(Morpheme_path):    # 여기수정
                     mean_list.append(result.mean)
                     refList.append(part_list[0])
                     locationList.append(result.location)
-
                     
                 if(samePart == 1):
                     results.append(href)
-
                 else:
                     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
                     print('단어 : ', word)
@@ -112,9 +109,10 @@ def matchingSign(Morpheme_path):    # 여기수정
                         results.append(locationList[0])
                     else:
                         results.append(locationList[n])
-            
         except:
+            print('（￣。。￣）')
             continue
+        
 
     print(results)
     print('##Match Sign End')

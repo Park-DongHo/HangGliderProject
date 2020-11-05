@@ -110,7 +110,7 @@ $( document ).ready(function() {
           interim_span.innerHTML = linebreak(interim_transcript);
           $.ajax({
             type:'POST',
-            url:url4,
+            url: url4,
             data:{
                 text1:final_span.innerHTML,
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
