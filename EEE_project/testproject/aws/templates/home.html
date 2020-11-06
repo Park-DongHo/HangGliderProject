@@ -4,16 +4,16 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EEE</title>
-    <script src="https://kit.fontawesome.com/d94daef18d.js" crossorigin="anonymous"></script>
+    <title>Hang glider</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
     <link rel = "stylesheet" href="{% static 'home.css' %}" type="text/css">
 </head>
 <body>
     <nav class="navbar">
         <div class="navbar__logo">
-            <i class="fab fa-accusoft"></i>
-            <a href="">EEE</a>
+            <img src="{% static './images/logo.jpg'%}">
+            <a href="">HANG GLIDER</a>
         </div>
         {% if user.is_authenticated %}
             <ul class="navbar__id">
@@ -30,9 +30,41 @@
 
     <div class="body_container">
         <div class="wrapper">
-                <h1><a href="{% url 'lesson' %}">입장</a></h1>
+            <div class="text_container">
+                <div class="main">
+                    <p>Start your meeting <br> faster with our program</p>
+                </div>
+                <div class="detail">
+                    Welcome to Hang glider!
+                </div>
+                <button class="go_detail">
+                    <a href="{% url 'lesson' %}"> Enter </a>
+                </button>
+            </div>
+            <div class="image_container">
+                <img src="{% static './images/home.jpg'%}">
+            </div>
         </div>
     </div>
-    <!-- <video src="aws/media/sign/basic/28066.mp4" muted width="1280" height="720" autoplay></video> -->
+
+    <div class="body_container">
+        <div class="wrapper">
+            <div class="feedback_container">
+                <div class="title">Let's Get In Touch!</div>
+                <div class="text">
+                    <p>서비스 이용 후 개선할 점이나 보완할 점이 있다면 연락주세요. <br> 어떤 피드백이라도 괜찮습니다.</p>
+                </div>
+                <div class="contact">
+                    <i class="material-icons">mail</i>
+                    <p>spdlqj9777@likelion.org</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Copyright © 2020 EEE. All Rights Reserved.</p>
+        <p>대표 : 박동호 | 주소 : 광주인공지능사관학교 광주광역시 북구 첨단과기로 339 2층 </p>
+    </div>
 </body>
 </html>
