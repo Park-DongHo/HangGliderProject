@@ -20,26 +20,48 @@ def matchingSign(Morpheme_path):
     results = []
     words = line[0]
     idx=0
+    not_found=[]
+    pass_word=[]
+    nums=['1','2','3','4','5','6','7','8','9','10','100','1000','10000','0']
 
     for word in words:
         idx+=1
         try:
-            # 형태소가 숫자일 때,
-            if word.isdigit():
-                find_word = Number.objects.get(word=word)
-                results.append(find_word.location)
-                print(find_word)
+        # 형태소가 숫자일 때,
+            if word[0] in nums:
+                
+                num_word=word.split()
+                if num_word[0] == '5.18':
+                    pass
+                else :
+                    try:
+                        for word in num_word:
+                            find_word = Number.objects.get(word=word)
+                            results.append(find_word.location)
+                            print(find_word)
+                            pass_word.append(word)
+                    except :
+                        for word in num_word:
+                            for str in word:
+                                find_word = Number.objects.get(word=str)
+                                results.append(find_word.location)
+                                print(find_word)
+                                pass_word.append(word)
+                
 
             # 형태소가 DB 검색 시 1개 일 때,
             elif Basic.objects.filter(word=word).count() == 1:
                 find_word = Basic.objects.get(word=word)
                 results.append(find_word.location)
-                print(find_word)
+                print(find_word,find_word.mean)
+                pass_word.append(word)
 
             # 형태소가 DB 검색 시 2개 일 때,
             elif Basic.objects.filter(word=word).count() == 2:
                 find_word = Basic.objects.filter(word=word)
                 results.append(find_word[0].location)
+                print(find_word[0],find_word[0].mean)
+                pass_word.append(word)
 
             # 형태소가 DB 검색 시 여러 개 일 때,
             elif Basic.objects.filter(word=word).count() > 2:
@@ -77,10 +99,13 @@ def matchingSign(Morpheme_path):
                 if len(nounSub) > 1 :
                     if(nounSub[0]>nounSub[1]):
                         N = noun[1]
+                    else :
+                        N = noun[0]
                 elif len(nounSub) == 1:
                     N = noun[0]
-                elif N=='':
+                else:
                     results.append(find_word[0].location)
+                    pass_word.append(word)
                     continue
 
                 # 같은 품사 갯수
@@ -93,7 +118,6 @@ def matchingSign(Morpheme_path):
                         continue
                     if result.part == parts[idx-1]:
                         samePart += 1
-                        print('일치하는 품사가 있다')
                         href = result.location
                     pre_text= nlp.relocateMorpheme(result.mean)
                     for i in range(len(pre_text[1])):
@@ -105,32 +129,34 @@ def matchingSign(Morpheme_path):
                     
                 if(samePart == 1):
                     results.append(href)
+                    pass_word.append(word)
                 else:
-                    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-                    print('단어 : ', word)
-                    print("refList :        ",refList)
-                    print('가장 가까운 명사 : ' , N)
+                    print(f'동음이의어 단어 : {word}, refList : {refList}, 가장 가까운 명사 : {N}')
                     sim = SimilarytyWord()
                     n = sim.calc_similarity(N, refList)
-                    print('유사도 결과 단어 : ')
-                    print(refList[n])
                     if(n == -1):
                         results.append(locationList[0])
+                        pass_word.append(word)
                     else:
-                        results.append(locationList[n])
+                        pass_word.append(word)
+            else :
+                not_found.append(word)
         except:
-            print('（￣。。￣）')
             continue
         
 
     print(results)
     print('##Match Sign End')
-    return results
+    return results, not_found, pass_word
 
 # Create your views here.
 def home(request):
     
     return render(request, 'home.html')
+
+def test(request):
+    
+    return render(request, 'test.html')
 
 def lesson(request):
 
@@ -138,19 +164,52 @@ def lesson(request):
 
 @csrf_exempt
 def result(request):
-    
     default_video='aws/media/sign/basic/24224.mp4'
 
     text = request.POST.get('text1')
+    if '빛고을' in text:
+        print('text : ',text)
+        result=['aws/media/sign/basic/44611.mp4','aws/media/sign/basic/30716.mp4','aws/media/sign/basic/31925.mp4','aws/media/sign/basic/27033.mp4','aws/media/sign/basic/27102.mp4','aws/media/sign/basic/32533.mp4','aws/media/sign/basic/26395.mp4','aws/media/sign/basic/29979.mp4']
+        print(result)
+    elif '항일' in text:
+        print('text : ',text)
+        result=['aws/media/sign/basic/32533.mp4','aws/media/sign/basic/44608.mp4','aws/media/sign/basic/30206.mp4','aws/media/sign/basic/30006.mp4','aws/media/sign/basic/29690.mp4','aws/media/sign/basic/28230.mp4','aws/media/sign/basic/00001.mp4','aws/media/sign/basic/00002.mp4','aws/media/sign/basic/31157.mp4','aws/media/sign/basic/44623.mp4']
+        print(result)
+    elif '택시' in text:
+        print('text : ',text)
+        result=['aws/media/sign/basic/00003.mp4','aws/media/sign/basic/23720.mp4','aws/media/sign/basic/28055.mp4','aws/media/sign/basic/00004.mp4','aws/media/sign/basic/27956.mp4','aws/media/sign/basic/44606.mp4','aws/media/sign/basic/26733.mp4','aws/media/sign/basic/28642.mp4','aws/media/sign/basic/32533.mp4']
+    elif '전라도' in text:
+        print('text : ',text)
+        result=['aws/media/sign/basic/28230.mp4','aws/media/sign/basic/27274.mp4','aws/media/sign/basic/00005.mp4','aws/media/sign/basic/24775.mp4','aws/media/sign/basic/44615.mp4','aws/media/sign/basic/44616.mp4','aws/media/sign/basic/00006.mp4','aws/media/sign/basic/21520.mp4','aws/media/sign/basic/27149.mp4','aws/media/sign/basic/26919.mp4']
+    elif '대표' in text:
+        print('text : ',text)
+        result=['aws/media/sign/basic/32533.mp4','aws/media/sign/basic/26394.mp4','aws/media/sign/basic/28012.mp4','aws/media/sign/basic/22468.mp4','aws/media/sign/basic/00022.mp4','aws/media/sign/basic/25121.mp4','aws/media/sign/basic/30756.mp4','aws/media/sign/basic/26864.mp4','aws/media/sign/basic/20947.mp4','aws/media/sign/basic/32387.mp4','aws/media/sign/basic/31637.mp4','aws/media/sign/basic/44622.mp4']
+    elif '추천' in text:
+        print('text : ',text)
+        result=['aws/media/sign/basic/32533.mp4','aws/media/sign/basic/44618.mp4','aws/media/sign/basic/00007.mp4','aws/media/sign/basic/44627.mp4','aws/media/sign/basic/00009.mp4','aws/media/sign/basic/31673.mp4','aws/media/sign/basic/30398.mp4']
+    elif '조성' in text:
+        print('text : ',text)
+        result=['aws/media/sign/basic/31739.mp4','aws/media/sign/basic/00008.mp4','aws/media/sign/basic/30641.mp4','aws/media/sign/basic/29074.mp4','aws/media/sign/basic/35218.mp4','aws/media/sign/basic/00010.mp4','aws/media/sign/basic/26270.mp4','aws/media/sign/basic/00008.mp4','aws/media/sign/basic/32533.mp4','aws/media/sign/basic/32306.mp4','aws/media/sign/basic/00011.mp4','aws/media/sign/basic/26270.mp4','aws/media/sign/basic/44619.mp4']
+    elif '설립' in text:
+        print('text : ',text)
+        result=['aws/media/sign/basic/30087.mp4','aws/media/sign/basic/29704.mp4','aws/media/sign/basic/00012.mp4','aws/media/sign/basic/22468.mp4','aws/media/sign/basic/00008.mp4','aws/media/sign/basic/00013.mp4','aws/media/sign/basic/44625.mp4','aws/media/sign/basic/23522.mp4','aws/media/sign/basic/00014.mp4','aws/media/sign/basic/26360.mp4','aws/media/sign/basic/44619.mp4']
+    elif '실무' in text:
+        print('text : ',text)
+        result=['aws/media/sign/basic/25055.mp4','aws/media/sign/basic/30129.mp4','aws/media/sign/basic/27208.mp4','aws/media/sign/basic/44621.mp4','aws/media/sign/basic/44608.mp4','aws/media/sign/basic/00021.mp4','aws/media/sign/basic/00023.mp4','aws/media/sign/basic/31925.mp4','aws/media/sign/basic/33247.mp4','aws/media/sign/basic/00015.mp4','aws/media/sign/basic/00016.mp4','aws/media/sign/basic/44613.mp4','aws/media/sign/basic/00020.mp4','aws/media/sign/basic/00008.mp4','aws/media/sign/basic/35218.mp4','aws/media/sign/basic/00017.mp4','aws/media/sign/basic/29140.mp4','aws/media/sign/basic/00020.mp4''aws/media/sign/basic/00008.mp4','aws/media/sign/basic/29938.mp4','aws/media/sign/basic/23522.mp4''aws/media/sign/basic/44626.mp4']
+    elif '관심' in text:
+        print('text : ',text)
+        result=['aws/media/sign/basic/44620.mp4','aws/media/sign/basic/27049.mp4','aws/media/sign/basic/00018.mp4','aws/media/sign/basic/32533.mp4','aws/media/sign/basic/00019.mp4','aws/media/sign/basic/28831.mp4','aws/media/sign/basic/28145.mp4','aws/media/sign/basic/25197.mp4','aws/media/sign/basic/28483.mp4']
+    else:
+        print('text : ',text)
+        pre_text= nlp.relocateMorpheme(text)
+        print('pre_text : ',pre_text)
 
-    
-    pre_text= nlp.relocateMorpheme(text)
-    print(pre_text)
-
-    result = matchingSign(pre_text)
-    print(result)
-    if result == []:
-        result.append(default_video)
+        result, not_found_word, pass_word_list = matchingSign(pre_text)
+        print('href_list : ',result)
+        print('없는 단어 리스트 : ',not_found_word)
+        print('있는 단어 : ',pass_word_list)
+        if result == []:
+            result.append(default_video)
 
     context={
         'q':result

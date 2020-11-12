@@ -40,14 +40,11 @@ class SimilarytyWord:
             response = self.similarity_voca(true_word, ref_word[i])
             response = json.loads(str(response.data, "utf-8"))
             sim = response["return_object"]["WWN WordRelInfo"]["WordRelInfo"]["Similarity"]
-            # print(str(ref_word[i]) + ": "+ str(sim))
             for i in range(len(sim)):
                 s = + sim[i]["SimScore"]
 
             a = s / len(sim)
             result_sim.append(a)
-            # print('평균: '+str(a))
-        print(result_sim)
         if max(result_sim) <= 0.0:
             return -1
         return result_sim.index(max(result_sim))

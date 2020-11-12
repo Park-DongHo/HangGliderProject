@@ -26,7 +26,6 @@ class NLP:
 
         line = self.komoran.get_list(subtitle_path)
         line = self.splitLine(line)    # ex) [['식사', 'NNG'],~~~]
-        print(line)
         for w, m in line:
             r, word, morph = self.pr.process_morph(m, w)
             if r == 1:

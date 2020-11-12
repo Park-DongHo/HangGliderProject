@@ -65,4 +65,3 @@ class Morph:
 
     # 기호
     SPECIAL_MARK = {'?': 'ㅂ니까'}
-pass

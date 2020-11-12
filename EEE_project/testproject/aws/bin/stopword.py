@@ -5,7 +5,6 @@ from .constant import Morph
 class StopWord:
     def __init__(self):
         self.mp = Morph()
-        pass
 
     def process_morph(self, morph, word):
         m = self.mp.MORPH[morph]
@@ -107,6 +106,3 @@ class StopWord:
     # 무조건 제거
     def ignore(self, morph, word):
         return 0, '', ''
-
-if __name__ == "__main__":
-    pass

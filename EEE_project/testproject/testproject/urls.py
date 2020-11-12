@@ -27,5 +27,6 @@ urlpatterns = [
     path('login/', aws.views.login, name='login'),
     path('logout/', aws.views.logout, name='logout'),
     path('lesson/', aws.views.lesson, name='lesson'),
+    path('test/', aws.views.test, name='test'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

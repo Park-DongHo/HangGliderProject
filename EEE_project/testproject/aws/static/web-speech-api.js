@@ -103,6 +103,9 @@ $( document ).ready(function() {
     recognition.onresult = function(event) {
       var interim_transcript = '';
       for (var i = event.resultIndex; i < event.results.length; ++i) {
+        if (interim_span.innerHTML.length >=40){
+          recognition.stop();
+        }
         if (event.results[i].isFinal) {
           final_transcript += event.results[i][0].transcript;
           final_transcript = capitalize(final_transcript);
@@ -125,32 +128,39 @@ $( document ).ready(function() {
                 } else{
                     video_list = $.merge( $.merge([],video_list), new_arr);
                 }
+                if (recognizing) {
+                  final_transcript = '';
+                  final_span.innerHTML = '';
+                  interim_span.innerHTML = '';
+                  firstview = false;
+                  console.log("data pass2",video_list);
+                  return;
+                }
+                final_transcript = '';
+                recognition.lang = select_dialect.value;
+                recognition.start();
+                ignore_onend = false;
                 final_span.innerHTML = '';
                 interim_span.innerHTML = '';
-                final_transcript = '';
+                start_img.src = url2;
+                start_timestamp = event.timeStamp;
                 firstview = false;
-
                 
                 console.log("data pass2",video_list);
-                
-                
-                
             },
             error : function(xhr,errmsg,err) {
             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
             }
           });
-        } else {
-          interim_transcript += event.results[i][0].transcript;
-          final_transcript = capitalize(final_transcript);
-          final_span.innerHTML = linebreak(final_transcript);
-          interim_span.innerHTML = linebreak(interim_transcript);
+        } 
+        else {
+                interim_transcript += event.results[i][0].transcript;
+                final_transcript = capitalize(final_transcript);
+                final_span.innerHTML = linebreak(final_transcript);
+                interim_span.innerHTML = linebreak(interim_transcript);
         }
       }
-      
-      
     };
-    
   }
 });
 
