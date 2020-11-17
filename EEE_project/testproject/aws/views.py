@@ -167,49 +167,17 @@ def result(request):
     default_video='aws/media/sign/basic/24224.mp4'
 
     text = request.POST.get('text1')
-    if '빛고을' in text:
-        print('text : ',text)
-        result=['aws/media/sign/basic/44611.mp4','aws/media/sign/basic/30716.mp4','aws/media/sign/basic/31925.mp4','aws/media/sign/basic/27033.mp4','aws/media/sign/basic/27102.mp4','aws/media/sign/basic/32533.mp4','aws/media/sign/basic/26395.mp4','aws/media/sign/basic/29979.mp4']
-        print(result)
-    elif '항일' in text:
-        print('text : ',text)
-        result=['aws/media/sign/basic/32533.mp4','aws/media/sign/basic/44608.mp4','aws/media/sign/basic/30206.mp4','aws/media/sign/basic/30006.mp4','aws/media/sign/basic/29690.mp4','aws/media/sign/basic/28230.mp4','aws/media/sign/basic/00001.mp4','aws/media/sign/basic/00002.mp4','aws/media/sign/basic/31157.mp4','aws/media/sign/basic/44623.mp4']
-        print(result)
-    elif '택시' in text:
-        print('text : ',text)
-        result=['aws/media/sign/basic/00003.mp4','aws/media/sign/basic/23720.mp4','aws/media/sign/basic/28055.mp4','aws/media/sign/basic/00004.mp4','aws/media/sign/basic/27956.mp4','aws/media/sign/basic/44606.mp4','aws/media/sign/basic/26733.mp4','aws/media/sign/basic/28642.mp4','aws/media/sign/basic/32533.mp4']
-    elif '전라도' in text:
-        print('text : ',text)
-        result=['aws/media/sign/basic/28230.mp4','aws/media/sign/basic/27274.mp4','aws/media/sign/basic/00005.mp4','aws/media/sign/basic/24775.mp4','aws/media/sign/basic/44615.mp4','aws/media/sign/basic/44616.mp4','aws/media/sign/basic/00006.mp4','aws/media/sign/basic/21520.mp4','aws/media/sign/basic/27149.mp4','aws/media/sign/basic/26919.mp4']
-    elif '대표' in text:
-        print('text : ',text)
-        result=['aws/media/sign/basic/32533.mp4','aws/media/sign/basic/26394.mp4','aws/media/sign/basic/28012.mp4','aws/media/sign/basic/22468.mp4','aws/media/sign/basic/00022.mp4','aws/media/sign/basic/25121.mp4','aws/media/sign/basic/30756.mp4','aws/media/sign/basic/26864.mp4','aws/media/sign/basic/20947.mp4','aws/media/sign/basic/32387.mp4','aws/media/sign/basic/31637.mp4','aws/media/sign/basic/44622.mp4']
-    elif '추천' in text:
-        print('text : ',text)
-        result=['aws/media/sign/basic/32533.mp4','aws/media/sign/basic/44618.mp4','aws/media/sign/basic/00007.mp4','aws/media/sign/basic/44627.mp4','aws/media/sign/basic/00009.mp4','aws/media/sign/basic/31673.mp4','aws/media/sign/basic/30398.mp4']
-    elif '조성' in text:
-        print('text : ',text)
-        result=['aws/media/sign/basic/31739.mp4','aws/media/sign/basic/00008.mp4','aws/media/sign/basic/30641.mp4','aws/media/sign/basic/29074.mp4','aws/media/sign/basic/35218.mp4','aws/media/sign/basic/00010.mp4','aws/media/sign/basic/26270.mp4','aws/media/sign/basic/00008.mp4','aws/media/sign/basic/32533.mp4','aws/media/sign/basic/32306.mp4','aws/media/sign/basic/00011.mp4','aws/media/sign/basic/26270.mp4','aws/media/sign/basic/44619.mp4']
-    elif '설립' in text:
-        print('text : ',text)
-        result=['aws/media/sign/basic/30087.mp4','aws/media/sign/basic/29704.mp4','aws/media/sign/basic/00012.mp4','aws/media/sign/basic/22468.mp4','aws/media/sign/basic/00008.mp4','aws/media/sign/basic/00013.mp4','aws/media/sign/basic/44625.mp4','aws/media/sign/basic/23522.mp4','aws/media/sign/basic/00014.mp4','aws/media/sign/basic/26360.mp4','aws/media/sign/basic/44619.mp4']
-    elif '실무' in text:
-        print('text : ',text)
-        result=['aws/media/sign/basic/25055.mp4','aws/media/sign/basic/30129.mp4','aws/media/sign/basic/27208.mp4','aws/media/sign/basic/44621.mp4','aws/media/sign/basic/44608.mp4','aws/media/sign/basic/00021.mp4','aws/media/sign/basic/00023.mp4','aws/media/sign/basic/31925.mp4','aws/media/sign/basic/33247.mp4','aws/media/sign/basic/00015.mp4','aws/media/sign/basic/00016.mp4','aws/media/sign/basic/44613.mp4','aws/media/sign/basic/00020.mp4','aws/media/sign/basic/00008.mp4','aws/media/sign/basic/35218.mp4','aws/media/sign/basic/00017.mp4','aws/media/sign/basic/29140.mp4','aws/media/sign/basic/00020.mp4''aws/media/sign/basic/00008.mp4','aws/media/sign/basic/29938.mp4','aws/media/sign/basic/23522.mp4''aws/media/sign/basic/44626.mp4']
-    elif '관심' in text:
-        print('text : ',text)
-        result=['aws/media/sign/basic/44620.mp4','aws/media/sign/basic/27049.mp4','aws/media/sign/basic/00018.mp4','aws/media/sign/basic/32533.mp4','aws/media/sign/basic/00019.mp4','aws/media/sign/basic/28831.mp4','aws/media/sign/basic/28145.mp4','aws/media/sign/basic/25197.mp4','aws/media/sign/basic/28483.mp4']
-    else:
-        print('text : ',text)
-        pre_text= nlp.relocateMorpheme(text)
-        print('pre_text : ',pre_text)
+    
+    print('text : ',text)
+    pre_text= nlp.relocateMorpheme(text)
+    print('pre_text : ',pre_text)
 
-        result, not_found_word, pass_word_list = matchingSign(pre_text)
-        print('href_list : ',result)
-        print('없는 단어 리스트 : ',not_found_word)
-        print('있는 단어 : ',pass_word_list)
-        if result == []:
-            result.append(default_video)
+    result, not_found_word, pass_word_list = matchingSign(pre_text)
+    print('href_list : ',result)
+    print('없는 단어 리스트 : ',not_found_word)
+    print('있는 단어 : ',pass_word_list)
+    if result == []:
+        result.append(default_video)
 
     context={
         'q':result
